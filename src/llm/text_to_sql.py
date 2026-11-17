@@ -2,11 +2,52 @@
 import sqlite3
 import ollama
 import re
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 DB_PATH = BASE_DIR / "data" / "university.db"
 MODEL = "qwen2.5:3b"
+GROQ_MODEL = "openai/gpt-oss-20b"
+
+
+# Get Groq API key from Streamlit secrets or environment
+def get_groq_key():
+    key = os.getenv("GROQ_API_KEY")
+
+    if key:
+        return key
+
+    try:
+        import streamlit as st
+        return st.secrets.get("GROQ_API_KEY")
+    except Exception:
+        return None
+
+
+# Generate response using Groq or local Ollama
+def chat(messages):
+    api_key = get_groq_key()
+
+    if api_key:
+        from groq import Groq
+
+        client = Groq(api_key=api_key)
+
+        response = client.chat.completions.create(
+            model=GROQ_MODEL,
+            messages=messages
+        )
+
+        return response.choices[0].message.content or ""
+
+    response = ollama.chat(
+        model=MODEL,
+        messages=messages,
+        options={"temperature": 0}
+    )
+
+    return response["message"]["content"]
 
 
 # Read actual database schema
@@ -46,16 +87,14 @@ def get_schema():
     return schema
 
 
-# Clean the response received from Ollama
+# Clean generated SQL
 def clean_sql(response):
     sql = response.strip()
 
     sql = re.sub(r"^```(?:sql)?\s*", "", sql, flags=re.IGNORECASE)
     sql = re.sub(r"\s*```$", "", sql)
-
     sql = re.sub(r"^sql\s*", "", sql, flags=re.IGNORECASE)
 
-    # Remove common explanatory prefixes
     sql = re.sub(
         r"^(?:here is the sql query|sql query|query)\s*:\s*",
         "",
@@ -65,7 +104,6 @@ def clean_sql(response):
 
     sql = sql.strip()
 
-    # Remove enclosing parentheses around the complete query
     while sql.startswith("(") and sql.endswith(")"):
         depth = 0
         balanced = True
@@ -95,11 +133,9 @@ def validate_sql(sql):
     if not cleaned:
         raise ValueError("The model returned an empty SQL query.")
 
-    # Allow SELECT and WITH queries only
     if not re.match(r"^(select|with)\b", cleaned, re.IGNORECASE):
         raise ValueError("Only SELECT queries are allowed.")
 
-    # Reject multiple SQL statements
     if ";" in cleaned:
         raise ValueError("Only one SQL statement is allowed.")
 
@@ -126,8 +162,6 @@ def validate_sql(sql):
             return sqlite3.SQLITE_DENY
 
         conn.set_authorizer(authorize)
-
-        # Check SQL syntax and table/column references
         conn.execute("EXPLAIN " + cleaned)
 
         return True
@@ -137,7 +171,7 @@ def validate_sql(sql):
             conn.close()
 
 
-# Generate SQL using Ollama
+# Generate SQL using the available AI provider
 def generate_sql(question):
     schema = get_schema()
 
@@ -187,16 +221,12 @@ SQL RULES:
         "Generate one valid SQLite SELECT query."
     )
 
-    response = ollama.chat(
-        model=MODEL,
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt}
-        ],
-        options={"temperature": 0}
-    )
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt}
+    ]
 
-    sql = clean_sql(response["message"]["content"])
+    sql = clean_sql(chat(messages))
     last_error = None
 
     # Generate and validate, with one correction attempt
@@ -214,25 +244,21 @@ SQL RULES:
                     f"Generated SQL:\n{sql}"
                 )
 
-            correction = ollama.chat(
-                model=MODEL,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": (
-                        f"Original question:\n{question}\n\n"
-                        f"Previous SQL:\n{sql}\n\n"
-                        f"Validation error:\n{error}\n\n"
-                        "Correct the SQL query.\n"
-                        "Check every selected column against the schema.\n"
-                        "Use the correct tables and JOIN relationships.\n"
-                        "Return exactly one read-only SELECT query.\n"
-                        "Return SQL only, without markdown."
-                    )}
-                ],
-                options={"temperature": 0}
-            )
+            correction_messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": (
+                    f"Original question:\n{question}\n\n"
+                    f"Previous SQL:\n{sql}\n\n"
+                    f"Validation error:\n{error}\n\n"
+                    "Correct the SQL query.\n"
+                    "Check every selected column against the schema.\n"
+                    "Use the correct tables and JOIN relationships.\n"
+                    "Return exactly one read-only SELECT query.\n"
+                    "Return SQL only, without markdown."
+                )}
+            ]
 
-            sql = clean_sql(correction["message"]["content"])
+            sql = clean_sql(chat(correction_messages))
 
     raise ValueError(f"SQL generation failed: {last_error}")
 
