@@ -1,0 +1,4 @@
+experiment,total_questions,execution_success,execution_success_percent,correct_results,execution_accuracy_percent,average_generation_seconds,average_execution_seconds
+A_baseline,50,41,82.0,13,26.0,1.498,0.001
+B_schema_hints,50,44,88.0,15,30.0,1.578,0.002
+C_few_shot,50,45,90.0,15,30.0,1.998,0.005

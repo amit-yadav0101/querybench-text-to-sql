@@ -1,0 +1,357 @@
+
+[
+  {
+    "id": 1,
+    "category": "basic",
+    "difficulty": "easy",
+    "question": "List all students.",
+    "reference_sql": "select * from students;"
+  },
+  {
+    "id": 2,
+    "category": "basic",
+    "difficulty": "easy",
+    "question": "Find the names and roll numbers of all students.",
+    "reference_sql": "select name, roll_number from students;"
+  },
+  {
+    "id": 3,
+    "category": "basic",
+    "difficulty": "easy",
+    "question": "Find all female students.",
+    "reference_sql": "select * from students where gender = 'Female';"
+  },
+  {
+    "id": 4,
+    "category": "basic",
+    "difficulty": "easy",
+    "question": "Find students admitted in 2024.",
+    "reference_sql": "select * from students where admission_year = 2024;"
+  },
+  {
+    "id": 5,
+    "category": "basic",
+    "difficulty": "easy",
+    "question": "Find students admitted after 2024.",
+    "reference_sql": "select * from students where admission_year > 2024;"
+  },
+  {
+    "id": 6,
+    "category": "basic",
+    "difficulty": "easy",
+    "question": "List all courses worth 4 credits.",
+    "reference_sql": "select * from courses where credits = 4;"
+  },
+  {
+    "id": 7,
+    "category": "basic",
+    "difficulty": "easy",
+    "question": "Find all departments located in Block A.",
+    "reference_sql": "select * from departments where building = 'Block A';"
+  },
+  {
+    "id": 8,
+    "category": "basic",
+    "difficulty": "easy",
+    "question": "Find students whose names start with A.",
+    "reference_sql": "select * from students where name like 'A%';"
+  },
+  {
+    "id": 9,
+    "category": "basic",
+    "difficulty": "easy",
+    "question": "Display the five most recently admitted students.",
+    "reference_sql": "select * from students order by admission_year desc, student_id desc limit 5;"
+  },
+  {
+    "id": 10,
+    "category": "basic",
+    "difficulty": "easy",
+    "question": "Count the total number of students.",
+    "reference_sql": "select count(*) as total_students from students;"
+  },
+
+  {
+    "id": 11,
+    "category": "join",
+    "difficulty": "medium",
+    "question": "List each student's name along with their department name.",
+    "reference_sql": "select s.name, d.department_name from students s join departments d on s.department_id = d.department_id;"
+  },
+  {
+    "id": 12,
+    "category": "join",
+    "difficulty": "medium",
+    "question": "List each course with the name of its department.",
+    "reference_sql": "select c.course_name, d.department_name from courses c join departments d on c.department_id = d.department_id;"
+  },
+  {
+    "id": 13,
+    "category": "join",
+    "difficulty": "medium",
+    "question": "Display the names of students and the courses they are enrolled in.",
+    "reference_sql": "select s.name, c.course_name from students s join enrollments e on s.student_id = e.student_id join courses c on e.course_id = c.course_id;"
+  },
+  {
+    "id": 14,
+    "category": "join",
+    "difficulty": "medium",
+    "question": "Find the names of students enrolled in Database Management.",
+    "reference_sql": "select s.name from students s join enrollments e on s.student_id = e.student_id join courses c on e.course_id = c.course_id where c.course_name = 'Database Management';"
+  },
+  {
+    "id": 15,
+    "category": "join",
+    "difficulty": "medium",
+    "question": "Display student names, assessment types and marks obtained.",
+    "reference_sql": "select s.name, m.assessment_type, m.marks_obtained from students s join enrollments e on s.student_id = e.student_id join marks m on e.enrollment_id = m.enrollment_id;"
+  },
+  {
+    "id": 16,
+    "category": "join",
+    "difficulty": "medium",
+    "question": "List student names, course names and semester numbers for all enrollments.",
+    "reference_sql": "select s.name, c.course_name, e.semester from students s join enrollments e on s.student_id = e.student_id join courses c on e.course_id = c.course_id;"
+  },
+  {
+    "id": 17,
+    "category": "join",
+    "difficulty": "medium",
+    "question": "Show each department name and the courses offered by it.",
+    "reference_sql": "select d.department_name, c.course_name from departments d join courses c on d.department_id = c.department_id;"
+  },
+  {
+    "id": 18,
+    "category": "join",
+    "difficulty": "medium",
+    "question": "Display student roll numbers with the course codes they are enrolled in.",
+    "reference_sql": "select s.roll_number, c.course_code from students s join enrollments e on s.student_id = e.student_id join courses c on e.course_id = c.course_id;"
+  },
+  {
+    "id": 19,
+    "category": "join",
+    "difficulty": "hard",
+    "question": "Find the names of students, their course names and final examination marks.",
+    "reference_sql": "select s.name, c.course_name, m.marks_obtained from students s join enrollments e on s.student_id = e.student_id join courses c on e.course_id = c.course_id join marks m on e.enrollment_id = m.enrollment_id where m.assessment_type = 'Final';"
+  },
+  {
+    "id": 20,
+    "category": "join",
+    "difficulty": "hard",
+    "question": "List students with their department names and enrolled course names.",
+    "reference_sql": "select s.name, d.department_name, c.course_name from students s join departments d on s.department_id = d.department_id join enrollments e on s.student_id = e.student_id join courses c on e.course_id = c.course_id;"
+  },
+
+  {
+    "id": 21,
+    "category": "aggregation",
+    "difficulty": "easy",
+    "question": "Count the number of students in each department.",
+    "reference_sql": "select d.department_name, count(s.student_id) as total_students from departments d left join students s on d.department_id = s.department_id group by d.department_id, d.department_name;"
+  },
+  {
+    "id": 22,
+    "category": "aggregation",
+    "difficulty": "easy",
+    "question": "Find the average marks obtained in all assessments.",
+    "reference_sql": "select avg(marks_obtained) as average_marks from marks;"
+  },
+  {
+    "id": 23,
+    "category": "aggregation",
+    "difficulty": "medium",
+    "question": "Find the average marks obtained by students in each course.",
+    "reference_sql": "select c.course_name, avg(m.marks_obtained) as average_marks from courses c join enrollments e on c.course_id = e.course_id join marks m on e.enrollment_id = m.enrollment_id group by c.course_id, c.course_name;"
+  },
+  {
+    "id": 24,
+    "category": "aggregation",
+    "difficulty": "medium",
+    "question": "Count the number of courses offered by each department.",
+    "reference_sql": "select d.department_name, count(c.course_id) as total_courses from departments d left join courses c on d.department_id = c.department_id group by d.department_id, d.department_name;"
+  },
+  {
+    "id": 25,
+    "category": "aggregation",
+    "difficulty": "medium",
+    "question": "Find the highest marks obtained in each assessment type.",
+    "reference_sql": "select assessment_type, max(marks_obtained) as highest_marks from marks group by assessment_type;"
+  },
+  {
+    "id": 26,
+    "category": "aggregation",
+    "difficulty": "medium",
+    "question": "Find the lowest marks obtained in each assessment type.",
+    "reference_sql": "select assessment_type, min(marks_obtained) as lowest_marks from marks group by assessment_type;"
+  },
+  {
+    "id": 27,
+    "category": "aggregation",
+    "difficulty": "medium",
+    "question": "Calculate the total marks obtained by each student across all assessments.",
+    "reference_sql": "select s.student_id, s.name, sum(m.marks_obtained) as total_marks from students s join enrollments e on s.student_id = e.student_id join marks m on e.enrollment_id = m.enrollment_id group by s.student_id, s.name;"
+  },
+  {
+    "id": 28,
+    "category": "aggregation",
+    "difficulty": "hard",
+    "question": "Find departments having more than 15 students.",
+    "reference_sql": "select d.department_name, count(s.student_id) as total_students from departments d join students s on d.department_id = s.department_id group by d.department_id, d.department_name having count(s.student_id) > 15;"
+  },
+  {
+    "id": 29,
+    "category": "aggregation",
+    "difficulty": "hard",
+    "question": "Find courses having an average final examination mark above 70.",
+    "reference_sql": "select c.course_name, avg(m.marks_obtained) as average_final_marks from courses c join enrollments e on c.course_id = e.course_id join marks m on e.enrollment_id = m.enrollment_id where m.assessment_type = 'Final' group by c.course_id, c.course_name having avg(m.marks_obtained) > 70;"
+  },
+  {
+    "id": 30,
+    "category": "aggregation",
+    "difficulty": "hard",
+    "question": "Find academic years having more than 50 enrollments.",
+    "reference_sql": "select academic_year, count(*) as total_enrollments from enrollments group by academic_year having count(*) > 50;"
+  },
+
+  {
+    "id": 31,
+    "category": "nested",
+    "difficulty": "medium",
+    "question": "Find students who obtained marks above the overall average marks.",
+    "reference_sql": "select distinct s.student_id, s.name from students s join enrollments e on s.student_id = e.student_id join marks m on e.enrollment_id = m.enrollment_id where m.marks_obtained > (select avg(marks_obtained) from marks);"
+  },
+  {
+    "id": 32,
+    "category": "nested",
+    "difficulty": "medium",
+    "question": "Find courses in which at least one student is enrolled.",
+    "reference_sql": "select c.course_id, c.course_name from courses c where exists (select 1 from enrollments e where e.course_id = c.course_id);"
+  },
+  {
+    "id": 33,
+    "category": "nested",
+    "difficulty": "medium",
+    "question": "Find students enrolled in Database Management.",
+    "reference_sql": "select student_id, name from students where student_id in (select e.student_id from enrollments e join courses c on e.course_id = c.course_id where c.course_name = 'Database Management');"
+  },
+  {
+    "id": 34,
+    "category": "nested",
+    "difficulty": "hard",
+    "question": "Find assessment records where the student's marks are above the average for that assessment type.",
+    "reference_sql": "select m.mark_id, s.name, m.assessment_type, m.marks_obtained from marks m join enrollments e on m.enrollment_id = e.enrollment_id join students s on e.student_id = s.student_id where m.marks_obtained > (select avg(m2.marks_obtained) from marks m2 where m2.assessment_type = m.assessment_type);"
+  },
+  {
+    "id": 35,
+    "category": "nested",
+    "difficulty": "hard",
+    "question": "Find courses whose average final examination marks are above the overall average final examination marks.",
+    "reference_sql": "select c.course_id, c.course_name, avg(m.marks_obtained) as average_marks from courses c join enrollments e on c.course_id = e.course_id join marks m on e.enrollment_id = m.enrollment_id where m.assessment_type = 'Final' group by c.course_id, c.course_name having avg(m.marks_obtained) > (select avg(marks_obtained) from marks where assessment_type = 'Final');"
+  },
+  {
+    "id": 36,
+    "category": "nested",
+    "difficulty": "hard",
+    "question": "Find departments whose student count is greater than the average student count across all departments.",
+    "reference_sql": "select d.department_id, d.department_name, count(s.student_id) as total_students from departments d join students s on d.department_id = s.department_id group by d.department_id, d.department_name having count(s.student_id) > (select avg(department_count) from (select count(*) as department_count from students group by department_id));"
+  },
+  {
+    "id": 37,
+    "category": "nested",
+    "difficulty": "medium",
+    "question": "Find departments that have at least one student.",
+    "reference_sql": "select d.department_id, d.department_name from departments d where exists (select 1 from students s where s.department_id = d.department_id);"
+  },
+  {
+    "id": 38,
+    "category": "nested",
+    "difficulty": "hard",
+    "question": "Find students enrolled in at least one course offered by their own department.",
+    "reference_sql": "select distinct s.student_id, s.name from students s where exists (select 1 from enrollments e join courses c on e.course_id = c.course_id where e.student_id = s.student_id and c.department_id = s.department_id);"
+  },
+  {
+    "id": 39,
+    "category": "nested",
+    "difficulty": "hard",
+    "question": "Find all assessment records that contain the highest marks for their respective assessment types.",
+    "reference_sql": "select mark_id, enrollment_id, assessment_type, marks_obtained from marks m where marks_obtained = (select max(m2.marks_obtained) from marks m2 where m2.assessment_type = m.assessment_type);"
+  },
+  {
+    "id": 40,
+    "category": "nested",
+    "difficulty": "hard",
+    "question": "Find students whose total marks across all assessments are greater than the average total marks per student.",
+    "reference_sql": "select s.student_id, s.name, sum(m.marks_obtained) as total_marks from students s join enrollments e on s.student_id = e.student_id join marks m on e.enrollment_id = m.enrollment_id group by s.student_id, s.name having sum(m.marks_obtained) > (select avg(student_total) from (select sum(m2.marks_obtained) as student_total from enrollments e2 join marks m2 on e2.enrollment_id = m2.enrollment_id group by e2.student_id));"
+  },
+
+  {
+    "id": 41,
+    "category": "complex",
+    "difficulty": "hard",
+    "question": "Find the five students with the highest average final examination marks.",
+    "reference_sql": "select s.student_id, s.name, avg(m.marks_obtained) as average_marks from students s join enrollments e on s.student_id = e.student_id join marks m on e.enrollment_id = m.enrollment_id where m.assessment_type = 'Final' group by s.student_id, s.name order by average_marks desc, s.student_id limit 5;"
+  },
+  {
+    "id": 42,
+    "category": "complex",
+    "difficulty": "hard",
+    "question": "Find the average final examination marks for courses offered by each department.",
+    "reference_sql": "select d.department_name, avg(m.marks_obtained) as average_marks from departments d join courses c on d.department_id = c.department_id join enrollments e on c.course_id = e.course_id join marks m on e.enrollment_id = m.enrollment_id where m.assessment_type = 'Final' group by d.department_id, d.department_name;"
+  },
+  {
+    "id": 43,
+    "category": "complex",
+    "difficulty": "medium",
+    "question": "Find students enrolled in at least two different courses.",
+    "reference_sql": "select s.student_id, s.name, count(distinct e.course_id) as total_courses from students s join enrollments e on s.student_id = e.student_id group by s.student_id, s.name having count(distinct e.course_id) >= 2;"
+  },
+  {
+    "id": 44,
+    "category": "complex",
+    "difficulty": "hard",
+    "question": "Find courses whose enrollment count is greater than the average enrollment count across all courses.",
+    "reference_sql": "select c.course_id, c.course_name, count(e.enrollment_id) as total_enrollments from courses c join enrollments e on c.course_id = e.course_id group by c.course_id, c.course_name having count(e.enrollment_id) > (select avg(course_count) from (select count(*) as course_count from enrollments group by course_id));"
+  },
+  {
+    "id": 45,
+    "category": "complex",
+    "difficulty": "medium",
+    "question": "Find the highest final examination mark obtained in each course.",
+    "reference_sql": "select c.course_name, max(m.marks_obtained) as highest_marks from courses c join enrollments e on c.course_id = e.course_id join marks m on e.enrollment_id = m.enrollment_id where m.assessment_type = 'Final' group by c.course_id, c.course_name;"
+  },
+  {
+    "id": 46,
+    "category": "complex",
+    "difficulty": "medium",
+    "question": "Find departments that do not offer any courses.",
+    "reference_sql": "select d.department_id, d.department_name from departments d left join courses c on d.department_id = c.department_id where c.course_id is null;"
+  },
+  {
+    "id": 47,
+    "category": "complex",
+    "difficulty": "hard",
+    "question": "Display each student's name, number of enrolled courses and average marks across all assessments.",
+    "reference_sql": "select s.student_id, s.name, count(distinct e.course_id) as total_courses, avg(m.marks_obtained) as average_marks from students s join enrollments e on s.student_id = e.student_id join marks m on e.enrollment_id = m.enrollment_id group by s.student_id, s.name;"
+  },
+  {
+    "id": 48,
+    "category": "complex",
+    "difficulty": "hard",
+    "question": "Find the three courses with the highest total marks obtained across all assessments.",
+    "reference_sql": "select c.course_id, c.course_name, sum(m.marks_obtained) as total_marks from courses c join enrollments e on c.course_id = e.course_id join marks m on e.enrollment_id = m.enrollment_id group by c.course_id, c.course_name order by total_marks desc, c.course_id limit 3;"
+  },
+  {
+    "id": 49,
+    "category": "complex",
+    "difficulty": "hard",
+    "question": "Find students enrolled in courses offered by departments other than their own department.",
+    "reference_sql": "select distinct s.student_id, s.name from students s join enrollments e on s.student_id = e.student_id join courses c on e.course_id = c.course_id where c.department_id <> s.department_id;"
+  },
+  {
+    "id": 50,
+    "category": "complex",
+    "difficulty": "hard",
+    "question": "Find students whose average final examination marks are greater than the average final examination marks of students in their own department.",
+    "reference_sql": "select s.student_id, s.name, avg(m.marks_obtained) as average_marks from students s join enrollments e on s.student_id = e.student_id join marks m on e.enrollment_id = m.enrollment_id where m.assessment_type = 'Final' group by s.student_id, s.name, s.department_id having avg(m.marks_obtained) > (select avg(m2.marks_obtained) from students s2 join enrollments e2 on s2.student_id = e2.student_id join marks m2 on e2.enrollment_id = m2.enrollment_id where s2.department_id = s.department_id and m2.assessment_type = 'Final');"
+  }
+]
